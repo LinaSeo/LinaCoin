@@ -1,42 +1,20 @@
 package main
 
 import (
-	"crypto/sha256"
 	"fmt"
+
+	"github.com/LinaSeo/LinaCoin/blockchain"
 )
 
-type block struct {
-	data     string
-	hash     string
-	prevHash string
-}
-
-type blockchain struct {
-	blocks []block
-}
-
-func (b *blockchain) addBlock(msg string) {
-	prevHash := ""
-	if len(b.blocks) > 0 {
-		prevHash = b.blocks[len(b.blocks)-1].hash
-	}
-	newBlock := block{msg, "", prevHash}
-
-	hash := sha256.Sum256([]byte(newBlock.data + newBlock.prevHash))
-	hexHash := fmt.Sprintf("%x", hash)
-	newBlock.hash = hexHash
-
-	b.blocks = append(b.blocks, newBlock)
-}
-
-func (b *blockchain) listBlocks() {
-	for _, block := range b.blocks {
-		fmt.Println(block.data)
-		fmt.Println(block.prevHash)
-		fmt.Println(block.hash)
-	}
-}
-
 func main() {
+	mainChain := blockchain.GetBlockchain()
+	mainChain.AddBlock("Second")
+	mainChain.AddBlock("Third")
+	mainChain.AddBlock("Fourth")
 
+	for _, block := range mainChain.AllBlocks() {
+		fmt.Println("Data: %s\n", block.Data)
+		fmt.Println("Hash: %s\n", block.Hash)
+		fmt.Println("prevHash: %s\n", block.PrevHash)
+	}
 }
