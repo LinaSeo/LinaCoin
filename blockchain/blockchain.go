@@ -24,11 +24,11 @@ var b *blockchain
 var once sync.Once
 
 func getLastHash() string {
-	height := len(b.AllBlocks()) - 1
+	height := len(b.AllBlocks())
 	if height == 0 {
 		return ""
 	}
-	return b.blocks[height].Hash
+	return b.blocks[height-1].Hash
 }
 
 func (b *block) calculateHash() {
