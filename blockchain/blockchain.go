@@ -23,8 +23,8 @@ var b *blockchain
 // Run only once while parallel env
 var once sync.Once
 
-func getLashHash() string {
-	height := len(b.AllBlocks())
+func getLastHash() string {
+	height := len(b.AllBlocks()) - 1
 	if height == 0 {
 		return ""
 	}
@@ -38,7 +38,7 @@ func (b *block) calculateHash() {
 }
 
 func createBlock(data string) *block {
-	newBlock := block{data, "", getLashHash()}
+	newBlock := block{data, "", getLastHash()}
 	newBlock.calculateHash()
 
 	return &newBlock

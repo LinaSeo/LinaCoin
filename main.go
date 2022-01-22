@@ -13,8 +13,8 @@ func main() {
 	mainChain.AddBlock("Fourth")
 
 	for _, block := range mainChain.AllBlocks() {
-		fmt.Println("Data: %s\n", block.Data)
-		fmt.Println("Hash: %s\n", block.Hash)
-		fmt.Println("prevHash: %s\n", block.PrevHash)
+		fmt.Printf("Data: %s\n", block.Data)
+		fmt.Printf("Hash: %s\n", block.Hash)
+		fmt.Printf("prevHash: %s\n", block.PrevHash)
 	}
 }
