@@ -11,7 +11,7 @@ import (
 
 const (
 	port        string = ":4000"
-	templateDir        = "templates/"
+	templateDir string = "templates/"
 )
 
 // set templates variable to load all templates before execute
@@ -28,6 +28,20 @@ func home(rw http.ResponseWriter, r *http.Request) {
 	templates.ExecuteTemplate(rw, "home", data)
 }
 
+func add(rw http.ResponseWriter, r *http.Request) {
+	// r.method POST || GET
+	switch r.Method {
+	case "GET":
+		templates.ExecuteTemplate(rw, "add", nil)
+	case "POST":
+		r.ParseForm()
+		data := r.Form.Get("blockData")
+		blockchain.GetBlockchain().AddBlock(data)
+		http.Redirect(rw, r, "/", http.StatusPermanentRedirect)
+	}
+
+}
+
 func main() {
 	// template.Must() : handling error
 	// template.ParseGlob() : loading more than one file
@@ -35,6 +49,7 @@ func main() {
 	// Do use templates object instead template
 	templates = template.Must(templates.ParseGlob(templateDir + "partials/*.gohtml"))
 	http.HandleFunc("/", home)
+	http.HandleFunc("/add", add)
 	fmt.Printf("Listending on httl://localhost%s\n", port)
 	log.Fatal(http.ListenAndServe(port, nil))
 }
