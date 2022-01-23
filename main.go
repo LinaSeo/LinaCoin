@@ -2,19 +2,29 @@ package main
 
 import (
 	"fmt"
+	"html/template"
+	"log"
+	"net/http"
 
-	"github.com/LinaSeo/LinaCoin/blockchain"
+	"github.com/tendermint/tendermint/proto/tendermint/blockchain"
 )
 
-func main() {
-	mainChain := blockchain.GetBlockchain()
-	mainChain.AddBlock("Second")
-	mainChain.AddBlock("Third")
-	mainChain.AddBlock("Fourth")
+const port string = ":4000"
 
-	for _, block := range mainChain.AllBlocks() {
-		fmt.Printf("Data: %s\n", block.Data)
-		fmt.Printf("Hash: %s\n", block.Hash)
-		fmt.Printf("prevHash: %s\n", block.PrevHash)
-	}
+type homeData struct {
+	PageTitle string
+	Blocks    []*blockchain.Block
+}
+
+func home(rw http.ResponseWriter, r *http.Request) {
+	// template.Must() : handling error
+	tmpl := template.Must(template.ParseFiles("templates/home.html"))
+	data := homeData{"Home", blockchain.GetBlockchain().AllBlocks()}
+	tmpl.Execute(rw, data)
+}
+
+func main() {
+	http.HandleFunc("/", home)
+	fmt.Printf("Listending on httl://localhost%s\n", port)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
