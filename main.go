@@ -32,7 +32,8 @@ func main() {
 	// template.Must() : handling error
 	// template.ParseGlob() : loading more than one file
 	templates = template.Must(template.ParseGlob(templateDir + "pages/*.gohtml"))
-	templates = template.Must(template.ParseGlob(templateDir + "partials/*.gohtml"))
+	// Do use templates object instead template
+	templates = template.Must(templates.ParseGlob(templateDir + "partials/*.gohtml"))
 	http.HandleFunc("/", home)
 	fmt.Printf("Listending on httl://localhost%s\n", port)
 	log.Fatal(http.ListenAndServe(port, nil))
