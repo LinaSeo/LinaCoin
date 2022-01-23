@@ -1,7 +1,11 @@
 package main
 
-import "github.com/LinaSeo/LinaCoin/explorer"
+import (
+	"github.com/LinaSeo/LinaCoin/explorer"
+	"github.com/LinaSeo/LinaCoin/rest"
+)
 
 func main() {
-	explorer.Start()
+	go explorer.Start(3000)
+	rest.Start(4000)
 }

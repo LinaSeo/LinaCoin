@@ -10,7 +10,6 @@ import (
 )
 
 const (
-	port        string = ":4000"
 	templateDir string = "explorer/templates/"
 )
 
@@ -42,14 +41,18 @@ func add(rw http.ResponseWriter, r *http.Request) {
 
 }
 
-func Start() {
+var port string
+
+func Start(aPort int) {
+	port = fmt.Sprintf(":%d", aPort)
+	handler := http.NewServeMux()
 	// template.Must() : handling error
 	// template.ParseGlob() : loading more than one file
 	templates = template.Must(template.ParseGlob(templateDir + "pages/*.gohtml"))
 	// Do use templates object instead template
 	templates = template.Must(templates.ParseGlob(templateDir + "partials/*.gohtml"))
-	http.HandleFunc("/", home)
-	http.HandleFunc("/add", add)
-	fmt.Printf("Listending on httl://localhost%s\n", port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	handler.HandleFunc("/", home)
+	handler.HandleFunc("/add", add)
+	fmt.Printf("Listening on httl://localhost%s\n", port)
+	log.Fatal(http.ListenAndServe(port, handler))
 }
