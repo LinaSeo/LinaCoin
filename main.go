@@ -6,10 +6,16 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/tendermint/tendermint/proto/tendermint/blockchain"
+	"github.com/LinaSeo/LinaCoin/blockchain"
 )
 
-const port string = ":4000"
+const (
+	port        string = ":4000"
+	templateDir        = "templates/"
+)
+
+// set templates variable to load all templates before execute
+var templates *template.Template
 
 type homeData struct {
 	PageTitle string
@@ -17,13 +23,16 @@ type homeData struct {
 }
 
 func home(rw http.ResponseWriter, r *http.Request) {
-	// template.Must() : handling error
-	tmpl := template.Must(template.ParseFiles("templates/home.html"))
 	data := homeData{"Home", blockchain.GetBlockchain().AllBlocks()}
-	tmpl.Execute(rw, data)
+	// execute various templates
+	templates.ExecuteTemplate(rw, "home", data)
 }
 
 func main() {
+	// template.Must() : handling error
+	// template.ParseGlob() : loading more than one file
+	templates = template.Must(template.ParseGlob(templateDir + "pages/*.gohtml"))
+	templates = template.Must(template.ParseGlob(templateDir + "partials/*.gohtml"))
 	http.HandleFunc("/", home)
 	fmt.Printf("Listending on httl://localhost%s\n", port)
 	log.Fatal(http.ListenAndServe(port, nil))
