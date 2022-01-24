@@ -1,11 +1,9 @@
 package main
 
 import (
-	"github.com/LinaSeo/LinaCoin/explorer"
-	"github.com/LinaSeo/LinaCoin/rest"
+	"github.com/LinaSeo/LinaCoin/cli"
 )
 
 func main() {
-	go explorer.Start(3000)
-	rest.Start(4000)
+	cli.Start()
 }
